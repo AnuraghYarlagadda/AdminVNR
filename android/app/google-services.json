@@ -1,0 +1,130 @@
+{
+  "project_info": {
+    "project_number": "173918961473",
+    "firebase_url": "https://placements-835e0.firebaseio.com",
+    "project_id": "placements-835e0",
+    "storage_bucket": "placements-835e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173918961473:android:80eb3363a533415b",
+        "android_client_info": {
+          "package_name": "com.develop.android.placements"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173918961473-nust402gpajh498tdj8c2d18jnudrk93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.develop.android.placements",
+            "certificate_hash": "a5167723800d0da4734679fc48026a9f87078f7b"
+          }
+        },
+        {
+          "client_id": "173918961473-9pqpenupdu4c867b70qqnb540qtk73qs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.develop.android.placements",
+            "certificate_hash": "f59e0d86be65378c77ccf81e16a8ce622ab30eaf"
+          }
+        },
+        {
+          "client_id": "173918961473-qor90jf29hs401c89lpbhta5jspo1796.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU-9kcVztO7ldiAYVRXFvyrhdOKeSx5mc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173918961473-qor90jf29hs401c89lpbhta5jspo1796.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173918961473:android:63a359e702ad693bf6ebc0",
+        "android_client_info": {
+          "package_name": "com.example.homevnr.adminplacements"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173918961473-gk4lpjs3u0ggac5ba8e2difbqcrie2g0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.homevnr.adminplacements",
+            "certificate_hash": "a5167723800d0da4734679fc48026a9f87078f7b"
+          }
+        },
+        {
+          "client_id": "173918961473-qor90jf29hs401c89lpbhta5jspo1796.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU-9kcVztO7ldiAYVRXFvyrhdOKeSx5mc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173918961473-qor90jf29hs401c89lpbhta5jspo1796.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173918961473:android:b16a7f31ec2f58aff6ebc0",
+        "android_client_info": {
+          "package_name": "com.example.vnrplacements"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173918961473-cg6frbs971pelerl0e2ngdjvhq1tg9fs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vnrplacements",
+            "certificate_hash": "a5167723800d0da4734679fc48026a9f87078f7b"
+          }
+        },
+        {
+          "client_id": "173918961473-qor90jf29hs401c89lpbhta5jspo1796.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU-9kcVztO7ldiAYVRXFvyrhdOKeSx5mc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173918961473-qor90jf29hs401c89lpbhta5jspo1796.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
