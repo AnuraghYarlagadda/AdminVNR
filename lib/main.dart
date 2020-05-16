@@ -1,4 +1,5 @@
 import 'package:adminplacements/home.dart';
+import 'package:adminplacements/manageAdmins.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,13 +11,22 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
-    return (MaterialApp(
-      title: "VNR CSE",
-      home: Home(),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        "home": (context) => Home(),
-      },
-    ));
+    return GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: MaterialApp(
+          title: "VNR CSE",
+          home: Home(),
+          debugShowCheckedModeBanner: false,
+          routes: {
+            "home": (context) => Home(),
+            "manageAdmins": (context) => ManageAdmin(),
+          },
+        ));
   }
 }
