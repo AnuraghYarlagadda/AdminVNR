@@ -42,10 +42,9 @@ class ManageAdminState extends State<ManageAdmin> {
     ref.onChildAdded.listen((onData) {
       adminDetails = AdminDetails.fromSnapshot(onData.snapshot);
       setState(() {
-        try{
-        this.admins.add(adminDetails);
-        }
-        catch (identifier) {
+        try {
+          this.admins.add(adminDetails);
+        } catch (identifier) {
           print("Added  ");
           print(identifier);
         }
@@ -56,10 +55,9 @@ class ManageAdminState extends State<ManageAdmin> {
       print(onData.snapshot.value);
       adminDetails = AdminDetails.fromSnapshot(onData.snapshot);
       setState(() {
-        try{
+        try {
           this.admins.removeWhere((value) => value.email == adminDetails.email);
-        }
-        catch (identifier) {
+        } catch (identifier) {
           print("Removed  ");
           print(identifier);
         }
@@ -70,13 +68,13 @@ class ManageAdminState extends State<ManageAdmin> {
     ref.onChildChanged.listen((onData) {
       adminDetails = AdminDetails.fromSnapshot(onData.snapshot);
       setState(() {
-        try{
-        this.admins.forEach((value) {
-          if (adminDetails.email == value.email) {
-            value.permission = adminDetails.permission;
-          }
-        });}
-        catch (identifier) {
+        try {
+          this.admins.forEach((value) {
+            if (adminDetails.email == value.email) {
+              value.permission = adminDetails.permission;
+            }
+          });
+        } catch (identifier) {
           print("Changed  ");
           print(identifier);
         }
@@ -206,7 +204,33 @@ class ManageAdminState extends State<ManageAdmin> {
                                                       .elementAt(index)
                                                       .permission,
                                                   onChanged: (value) {
-                                                    //print(value);
+                                                    value
+                                                        ? Fluttertoast.showToast(
+                                                            msg: "Granted Permission to " +
+                                                                this
+                                                                    .admins
+                                                                    .elementAt(
+                                                                        index)
+                                                                    .email,
+                                                            toastLength: Toast
+                                                                .LENGTH_LONG,
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            textColor:
+                                                                Colors.white)
+                                                        : Fluttertoast.showToast(
+                                                            msg: "Revoked Permission to " +
+                                                                this
+                                                                    .admins
+                                                                    .elementAt(
+                                                                        index)
+                                                                    .email,
+                                                            toastLength: Toast
+                                                                .LENGTH_LONG,
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                            textColor:
+                                                                Colors.white);
                                                     AdminDetails adminDetails =
                                                         new AdminDetails(
                                                             this
