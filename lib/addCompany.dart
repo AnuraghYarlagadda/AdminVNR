@@ -1,9 +1,15 @@
 import 'package:adminplacements/DataModels/companyDetails.dart';
 import 'package:adminplacements/displayCompanyDetailsandSubmit.dart';
+import 'package:adminplacements/settings.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:collection';
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/services.dart';
 
 import 'package:grouped_buttons/grouped_buttons.dart';
 
@@ -13,6 +19,8 @@ class AddCompany extends StatefulWidget {
     return AddCompanyState();
   }
 }
+
+enum Status { start, running, completed }
 
 class AddCompanyState extends State<AddCompany> {
   String companyName, filter;
@@ -34,6 +42,10 @@ class AddCompanyState extends State<AddCompany> {
   bool showWidgetEC = false;
   bool showWidgetJD = false;
 
+  File file;
+  String interviewDetails, interviewQuestions;
+  int interviewDetailsStatus, interviewQuestionsStatus;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +53,11 @@ class AddCompanyState extends State<AddCompany> {
     this.filter = "";
     this.ec = new LinkedHashMap();
     this.jd = new LinkedHashMap();
+
+    this.interviewDetails = "";
+    this.interviewQuestions = "";
+    this.interviewDetailsStatus = Status.start.index;
+    this.interviewQuestionsStatus = Status.start.index;
   }
 
   @override
@@ -52,6 +69,72 @@ class AddCompanyState extends State<AddCompany> {
     valueEC.dispose();
     valueJD.dispose();
     super.dispose();
+  }
+
+  Future filePicker(BuildContext context, String fileName, String what) async {
+    try {
+      file = await FilePicker.getFile(
+          type: FileType.custom, allowedExtensions: ['pdf']);
+      if (file != null) {
+        _uploadFile(file, fileName, what);
+      } else {
+        setState(() {
+          if (fileName == this.interviewDetails) {
+            this.interviewDetailsStatus = Status.start.index;
+          } else if (fileName == this.interviewQuestions) {
+            this.interviewQuestionsStatus = Status.start.index;
+          }
+        });
+      }
+    } on PlatformException catch (e) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Sorry...'),
+              content: Text('Unsupported exception: $e'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    }
+  }
+
+  Future<void> _uploadFile(File file, String filename, String what) async {
+    StorageReference storageReference;
+    storageReference =
+        FirebaseStorage.instance.ref().child(what).child(filename);
+    final StorageUploadTask uploadTask = storageReference.putFile(file);
+    final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+    final String url = (await downloadUrl.ref.getDownloadURL());
+    if (url != null) {
+      if (filename == this.interviewDetails) {
+        setState(() {
+          this.interviewDetailsStatus = Status.completed.index;
+          Fluttertoast.showToast(
+              msg: this.interviewDetails + " Uploaded Successfully!",
+              toastLength: Toast.LENGTH_SHORT,
+              backgroundColor: Colors.blue,
+              textColor: Colors.white);
+        });
+      } else if (filename == this.interviewQuestions) {
+        setState(() {
+          this.interviewQuestionsStatus = Status.completed.index;
+          Fluttertoast.showToast(
+              msg: this.interviewQuestions + " Uploaded Successfully!",
+              toastLength: Toast.LENGTH_SHORT,
+              backgroundColor: Colors.blue,
+              textColor: Colors.white);
+        });
+      }
+    }
+    print("URL is $url");
   }
 
   Future<bool> _onBackPressed() {
@@ -122,7 +205,7 @@ class AddCompanyState extends State<AddCompany> {
                         ),
                         border: InputBorder.none,
                         labelText: 'Enter Company Name',
-                        labelStyle: TextStyle(color: Colors.blue)),
+                        labelStyle: TextStyle(color: Colors.blueGrey)),
                   ),
                   Padding(padding: EdgeInsets.all(5)),
                   Padding(
@@ -240,6 +323,54 @@ class AddCompanyState extends State<AddCompany> {
                   this.showWidgetJD
                       ? keyValue(false)
                       : Padding(padding: EdgeInsets.all(0)),
+                  Padding(padding: EdgeInsets.all(5)),
+                  new Container(
+                      decoration: new BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                            color: Colors.black,
+                            width: 5.0,
+                          ),
+                          top: BorderSide(
+                            color: Colors.cyan,
+                            width: 3.0,
+                          ),
+                        ),
+                      ),
+                      child: new ListTile(
+                          title: Text(
+                            'Interview Details',
+                            style: TextStyle(
+                                color: Colors.pink,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          trailing:
+                              whatToLoadwhileUploading("Interview Details"))),
+                  Padding(padding: EdgeInsets.all(5)),
+                  new Container(
+                      decoration: new BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                            color: Colors.black,
+                            width: 5.0,
+                          ),
+                          bottom: BorderSide(
+                            color: Colors.cyan,
+                            width: 3.0,
+                          ),
+                        ),
+                      ),
+                      child: new ListTile(
+                          title: Text(
+                            'Interview Questions',
+                            style: TextStyle(
+                                color: Colors.pink,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          trailing:
+                              whatToLoadwhileUploading("Interview Questions"))),
                 ],
               ),
             )),
@@ -456,5 +587,130 @@ class AddCompanyState extends State<AddCompany> {
             ],
           ),
         ));
+  }
+
+  Widget whatToLoadwhileUploading(String whatToDownload) {
+    if (whatToDownload == "Interview Details") {
+      if (this.interviewDetailsStatus == Status.start.index) {
+        return (IconButton(
+          icon: Icon(Icons.cloud_upload),
+          color: Colors.blue,
+          iconSize: 35,
+          onPressed: () async {
+            await (Connectivity().checkConnectivity()).then((onValue) {
+              if (onValue == ConnectivityResult.none) {
+                Fluttertoast.showToast(
+                    msg: "No Active Internet Connection!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white);
+                openWIFISettingsVNR();
+              } else {
+                setState(() {
+                  this.companyName =
+                      company.text.trim().toString().toLowerCase();
+                });
+                if (this.companyName.length == 0) {
+                  Fluttertoast.showToast(
+                      msg: "Enter Company Name to upload",
+                      toastLength: Toast.LENGTH_SHORT,
+                      backgroundColor: Colors.cyan,
+                      textColor: Colors.white);
+                } else {
+                  setState(() {
+                    this.interviewDetails = this.companyName + "_details.pdf";
+                    this.interviewDetailsStatus = Status.running.index;
+                  });
+                  filePicker(context, this.interviewDetails, "details");
+                }
+              }
+            });
+          },
+        ));
+      } else if (this.interviewDetailsStatus == Status.running.index) {
+        return CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(Colors.pink),
+        );
+      } else {
+        return (MaterialButton(
+          onPressed: () {
+            Fluttertoast.showToast(
+                msg: "Already Uploaded!",
+                toastLength: Toast.LENGTH_SHORT,
+                backgroundColor: Colors.green,
+                textColor: Colors.white);
+          },
+          color: Colors.green,
+          textColor: Colors.white,
+          child: Icon(
+            Icons.check,
+            size: 24,
+          ),
+          //padding: EdgeInsets.all(8),
+          shape: CircleBorder(),
+        ));
+      }
+    } else if (whatToDownload == "Interview Questions") {
+      if (this.interviewQuestionsStatus == Status.start.index) {
+        return (IconButton(
+          icon: Icon(Icons.cloud_upload),
+          color: Colors.blue,
+          iconSize: 35,
+          onPressed: () async {
+            await (Connectivity().checkConnectivity()).then((onValue) {
+              if (onValue == ConnectivityResult.none) {
+                Fluttertoast.showToast(
+                    msg: "No Active Internet Connection!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white);
+                openWIFISettingsVNR();
+              } else {
+                setState(() {
+                  this.companyName =
+                      company.text.trim().toString().toLowerCase();
+                });
+                if (this.companyName.length == 0) {
+                  Fluttertoast.showToast(
+                      msg: "Enter Company Name to upload",
+                      toastLength: Toast.LENGTH_SHORT,
+                      backgroundColor: Colors.cyan,
+                      textColor: Colors.white);
+                } else {
+                  setState(() {
+                    this.interviewQuestions =
+                        this.companyName + "_questions.pdf";
+                    this.interviewQuestionsStatus = Status.running.index;
+                  });
+                  filePicker(context, this.interviewQuestions, "questions");
+                }
+              }
+            });
+          },
+        ));
+      } else if (this.interviewQuestionsStatus == Status.running.index) {
+        return CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(Colors.pink),
+        );
+      } else {
+        return (MaterialButton(
+          onPressed: () {
+            Fluttertoast.showToast(
+                msg: "Already Uploaded!",
+                toastLength: Toast.LENGTH_SHORT,
+                backgroundColor: Colors.green,
+                textColor: Colors.white);
+          },
+          color: Colors.green,
+          textColor: Colors.white,
+          child: Icon(
+            Icons.check,
+            size: 24,
+          ),
+          //padding: EdgeInsets.all(8),
+          shape: CircleBorder(),
+        ));
+      }
+    }
   }
 }

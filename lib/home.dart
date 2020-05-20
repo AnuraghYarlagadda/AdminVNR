@@ -302,10 +302,14 @@ class HomeState extends State<Home> {
                                         : Padding(
                                             padding: EdgeInsets.all(0),
                                           ),
-                                    new Divider(
-                                      height: 2.0,
-                                      thickness: 2.5,
-                                    ),
+                                    this.defaultAdmins.contains(this.userEmail)
+                                        ? new Divider(
+                                            height: 2.0,
+                                            thickness: 2.5,
+                                          )
+                                        : Padding(
+                                            padding: EdgeInsets.all(0),
+                                          ),
                                     ListTile(
                                       title: Text(
                                         "Alumni Details",
