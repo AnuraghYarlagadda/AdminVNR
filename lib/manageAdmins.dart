@@ -327,6 +327,12 @@ class ManageAdminState extends State<ManageAdmin> {
                                               emailController.text.trim(),
                                               false);
                                       postFirebase(adminDetails);
+                                      Fluttertoast.showToast(
+                                          msg: "User Added " +
+                                              adminDetails.email,
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          backgroundColor: Colors.green,
+                                          textColor: Colors.white);
                                       emailController.clear();
                                     }
                                   });
@@ -420,6 +426,11 @@ class ManageAdminState extends State<ManageAdmin> {
       ),
       onPressed: () {
         delFirebase(email);
+        Fluttertoast.showToast(
+            msg: "User Removed " + email,
+            toastLength: Toast.LENGTH_SHORT,
+            backgroundColor: Colors.red,
+            textColor: Colors.white);
         Navigator.of(context).pop(); // dismiss dialog
       },
     );

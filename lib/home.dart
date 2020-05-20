@@ -64,7 +64,6 @@ class HomeState extends State<Home> {
 
   checkUserStatus() async {
     await googleSignIn.isSignedIn().then((onValue) {
-      // print("Status" + onValue.toString());
       setState(() {
         this.userLoggedIn = onValue;
       });
@@ -82,27 +81,22 @@ class HomeState extends State<Home> {
         try {
           this.currentAdmins.add(adminDetails);
         } catch (identifier) {
-          print("Added  ");
           print(identifier);
         }
       });
       print(this.currentAdmins.length);
     });
     ref.onChildRemoved.listen((onData) {
-      print(onData.snapshot.value);
       adminDetails = AdminDetails.fromSnapshot(onData.snapshot);
-      print(adminDetails.email);
       setState(() {
         try {
           this
               .currentAdmins
               .removeWhere((value) => value.email == adminDetails.email);
         } catch (identifier) {
-          print("Removed  ");
           print(identifier);
         }
       });
-      print("home");
       print(this.currentAdmins.length);
     });
     ref.onChildChanged.listen((onData) {
@@ -115,7 +109,6 @@ class HomeState extends State<Home> {
             }
           });
         } catch (identifier) {
-          print("Changed  ");
           print(identifier);
         }
       });
@@ -229,7 +222,6 @@ class HomeState extends State<Home> {
 
   void handleClick(String value) async {
     await signOutGoogle().then((onValue) {
-      //print(onValue);
       Navigator.of(context).pushReplacementNamed("home");
     });
   }
@@ -271,163 +263,173 @@ class HomeState extends State<Home> {
                                 .length >
                             0
                         ? SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                this.defaultAdmins.contains(this.userEmail)
-                                    ? ListTile(
-                                        //isThreeLine: true,
-                                        title: Text(
-                                          "Manage Admins",
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              color: Colors.indigo,
-                                              fontWeight: FontWeight.bold,
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                        subtitle: Text(
-                                          "- Add or Delete Admins \n- Grant or Revoke Permissions",
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.black87),
-                                        ),
-                                        trailing: IconButton(
-                                            icon: Icon(
-                                              Icons.settings,
-                                              size: 35,
-                                              color: Colors.red,
+                            child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    this.defaultAdmins.contains(this.userEmail)
+                                        ? ListTile(
+                                            //isThreeLine: true,
+                                            title: Text(
+                                              "Manage Admins",
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  color: Colors.indigo,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontStyle: FontStyle.italic),
                                             ),
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pushNamed("manageAdmins");
-                                            }))
-                                    : Padding(
-                                        padding: EdgeInsets.all(0),
-                                      ),
-                                new Divider(
-                                  height: 2.0,
-                                  thickness: 2.5,
-                                ),
-                                ListTile(
-                                  title: Text(
-                                    "Alumni Details",
-                                    style: TextStyle(
-                                        fontSize: 25,
-                                        color: Colors.indigo,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                  trailing: whatToLoadwhileUploading(
-                                      "Alumni Details"),
-                                  subtitle: Text(
-                                    "- An Excel Sheet with the details of Alumni's Contact and the companies they got placed into.",
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.black87),
-                                  ),
-                                ),
-                                new Divider(
-                                  height: 2.0,
-                                  thickness: 2.5,
-                                ),
-                                ListTile(
-                                  title: Text(
-                                    "List Of Companies",
-                                    style: TextStyle(
-                                        fontSize: 25,
-                                        color: Colors.indigo,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                  trailing: whatToLoadwhileUploading(
-                                      "List Of Companies"),
-                                  subtitle: Text(
-                                    "- An Excel with the details of the Companies that visited our college for recruitment last year and the packages they offered.",
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.black87),
-                                  ),
-                                ),
-                                new Divider(
-                                  height: 2.0,
-                                  thickness: 2.5,
-                                ),
-                                ListTile(
-                                  title: Text(
-                                    "Requirements and Sample Resume",
-                                    style: TextStyle(
-                                        fontSize: 25,
-                                        color: Colors.indigo,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                  trailing: whatToLoadwhileUploading(
-                                      "Requirements and Sample Resume"),
-                                  subtitle: Text(
-                                    "- A PDF Document with the details of requirements that companies have been looking for and Few Sample Resumes to refer.",
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.black87),
-                                  ),
-                                ),
-                                new Divider(
-                                  height: 2.0,
-                                  thickness: 2.5,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(50),
-                                  child: Center(
-                                    child: RaisedButton(
-                                      onPressed: () async {
-                                        await (Connectivity()
-                                                .checkConnectivity())
-                                            .then((onValue) {
-                                          if (onValue ==
-                                              ConnectivityResult.none) {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "No Active Internet Connection!",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                backgroundColor: Colors.red,
-                                                textColor: Colors.white);
-                                            openWIFISettingsVNR();
-                                          } else {
-                                            if (this
-                                                    .currentAdmins
-                                                    .where((item) => (item
-                                                                .email ==
-                                                            this.userEmail &&
-                                                        item.permission))
-                                                    .length >
-                                                0) {
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) {
-                                                    return AddCompany();
-                                                  },
+                                            subtitle: Text(
+                                              "- Add or Delete Admins \n- Grant or Revoke Permissions",
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.black87),
+                                            ),
+                                            trailing: IconButton(
+                                                icon: Icon(
+                                                  Icons.settings,
+                                                  size: 35,
+                                                  color: Colors.red,
                                                 ),
-                                              );
-                                            } else {
-                                              Fluttertoast.showToast(
-                                                  msg: "Permission Denied ",
-                                                  toastLength:
-                                                      Toast.LENGTH_LONG,
-                                                  backgroundColor: Colors.red,
-                                                  textColor: Colors.white);
-                                            }
-                                          }
-                                        });
-                                      },
-                                      child: Text(
-                                        "Add Company Details",
-                                        style: TextStyle(fontSize: 17),
-                                      ),
-                                      color: Colors.green,
-                                      textColor: Colors.white,
-                                      elevation: 15,
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pushNamed(
+                                                          "manageAdmins");
+                                                }))
+                                        : Padding(
+                                            padding: EdgeInsets.all(0),
+                                          ),
+                                    new Divider(
+                                      height: 2.0,
+                                      thickness: 2.5,
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
+                                    ListTile(
+                                      title: Text(
+                                        "Alumni Details",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.indigo,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                      trailing: whatToLoadwhileUploading(
+                                          "Alumni Details"),
+                                      subtitle: Text(
+                                        "- An Excel Sheet with the details of Alumni's Contact and the companies they got placed into.",
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black87),
+                                      ),
+                                    ),
+                                    new Divider(
+                                      height: 2.0,
+                                      thickness: 2.5,
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        "List Of Companies",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.indigo,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                      trailing: whatToLoadwhileUploading(
+                                          "List Of Companies"),
+                                      subtitle: Text(
+                                        "- An Excel with the details of the Companies that visited our college for recruitment last year and the packages they offered.",
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black87),
+                                      ),
+                                    ),
+                                    new Divider(
+                                      height: 2.0,
+                                      thickness: 2.5,
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        "Requirements and Sample Resume",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.indigo,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                      trailing: whatToLoadwhileUploading(
+                                          "Requirements and Sample Resume"),
+                                      subtitle: Text(
+                                        "- A PDF Document with the details of requirements that companies have been looking for and Few Sample Resumes to refer.",
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black87),
+                                      ),
+                                    ),
+                                    new Divider(
+                                      height: 2.0,
+                                      thickness: 2.5,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(50),
+                                      child: Center(
+                                        child: RaisedButton(
+                                          onPressed: () async {
+                                            await (Connectivity()
+                                                    .checkConnectivity())
+                                                .then((onValue) {
+                                              if (onValue ==
+                                                  ConnectivityResult.none) {
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "No Active Internet Connection!",
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    backgroundColor: Colors.red,
+                                                    textColor: Colors.white);
+                                                openWIFISettingsVNR();
+                                              } else {
+                                                if (this
+                                                        .currentAdmins
+                                                        .where((item) => (item
+                                                                    .email ==
+                                                                this.userEmail &&
+                                                            item.permission))
+                                                        .length >
+                                                    0) {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return AddCompany();
+                                                      },
+                                                    ),
+                                                  );
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg: "Permission Denied ",
+                                                      toastLength:
+                                                          Toast.LENGTH_LONG,
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      textColor: Colors.white);
+                                                }
+                                              }
+                                            });
+                                          },
+                                          child: Text(
+                                            "Add Company Details",
+                                            style: TextStyle(fontSize: 17),
+                                          ),
+                                          color: Colors.green,
+                                          textColor: Colors.white,
+                                          elevation: 15,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )),
                             scrollDirection: Axis.vertical,
                           )
                         : NoAccess());

@@ -19,7 +19,7 @@ dependencies:
   connectivity: ^0.4.8+6
   app_settings: 4.0.0
   file_picker: ^1.9.0+1
-
+  grouped_buttons: ^1.0.4
   flutter_spinkit: ^4.1.2+1
   flutter_offline: ^0.3.0
 
