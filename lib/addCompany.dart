@@ -196,6 +196,9 @@ class AddCompanyState extends State<AddCompany> {
                     autofocus: false,
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.multiline,
+                    inputFormatters: [
+                      new WhitelistingTextInputFormatter(RegExp("[A-Za-z0-9 ]")),
+                    ],
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue),
@@ -326,16 +329,7 @@ class AddCompanyState extends State<AddCompany> {
                   Padding(padding: EdgeInsets.all(5)),
                   new Container(
                       decoration: new BoxDecoration(
-                        border: Border(
-                          left: BorderSide(
-                            color: Colors.black,
-                            width: 5.0,
-                          ),
-                          top: BorderSide(
-                            color: Colors.cyan,
-                            width: 3.0,
-                          ),
-                        ),
+                        border: Border.all(width: 1.5, color: Colors.cyan),
                       ),
                       child: new ListTile(
                           title: Text(
@@ -350,16 +344,7 @@ class AddCompanyState extends State<AddCompany> {
                   Padding(padding: EdgeInsets.all(5)),
                   new Container(
                       decoration: new BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                            color: Colors.black,
-                            width: 5.0,
-                          ),
-                          bottom: BorderSide(
-                            color: Colors.cyan,
-                            width: 3.0,
-                          ),
-                        ),
+                        border: Border.all(width: 1.5, color: Colors.cyan),
                       ),
                       child: new ListTile(
                           title: Text(
@@ -432,6 +417,9 @@ class AddCompanyState extends State<AddCompany> {
                 autofocus: false,
                 textAlign: TextAlign.start,
                 keyboardType: TextInputType.multiline,
+                inputFormatters: [
+                  new WhitelistingTextInputFormatter(RegExp("[A-Za-z0-9 ]")),
+                ],
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.pink),

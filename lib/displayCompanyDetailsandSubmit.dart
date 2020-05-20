@@ -29,6 +29,14 @@ class DisplayandSubmitCompanyDetailsState
 
   final fb = FirebaseDatabase.instance;
 
+  TextEditingController keyEC = new TextEditingController();
+  TextEditingController valueEC = new TextEditingController();
+  TextEditingController keyJD = new TextEditingController();
+  TextEditingController valueJD = new TextEditingController();
+
+  bool showWidgetEC = false;
+  bool showWidgetJD = false;
+
   @override
   void initState() {
     super.initState();
@@ -215,32 +223,72 @@ class DisplayandSubmitCompanyDetailsState
                                       : Column(children: <Widget>[
                                           Padding(
                                             padding: EdgeInsets.fromLTRB(
-                                                0, 20, 0, 0),
+                                                0, 10, 0, 0),
                                           ),
                                           this.ec.length != 0
-                                              ? Text(
-                                                  "Eligibility Criteria",
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      color: Colors.red,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontStyle:
-                                                          FontStyle.italic),
-                                                )
+                                              ? new Container(
+                                                  child: ListTile(
+                                                      title: Text(
+                                                        "Eligibility Criteria",
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            color: Colors.red,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                      ),
+                                                      trailing: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          IconButton(
+                                                              icon: Icon(
+                                                                  Icons.remove,
+                                                                  color: Colors
+                                                                      .black),
+                                                              onPressed: () {
+                                                                if (this.showWidgetEC !=
+                                                                    false) {
+                                                                  setState(() {
+                                                                    this.showWidgetEC =
+                                                                        false;
+                                                                  });
+                                                                }
+                                                              }),
+                                                          IconButton(
+                                                              icon: Icon(
+                                                                  Icons.add,
+                                                                  color: Colors
+                                                                      .black),
+                                                              onPressed: () {
+                                                                if (this.showWidgetEC !=
+                                                                    true) {
+                                                                  setState(() {
+                                                                    this.showWidgetEC =
+                                                                        true;
+                                                                  });
+                                                                }
+                                                              }),
+                                                        ],
+                                                      )))
                                               : Padding(
                                                   padding: EdgeInsets.all(0),
                                                 ),
+                                          this.showWidgetEC
+                                              ? keyValue(true)
+                                              : Padding(
+                                                  padding: EdgeInsets.all(0)),
                                           ListView.builder(
                                             physics:
                                                 NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
-                                            itemCount: ec.length,
+                                            itemCount: this.ec.length,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
                                               String key =
-                                                  ec.keys.elementAt(index);
-
+                                                  this.ec.keys.elementAt(index);
+                                              print(key);
                                               this.eckeyTextEditingControllers[
                                                       key] =
                                                   new TextEditingController();
@@ -280,176 +328,202 @@ class DisplayandSubmitCompanyDetailsState
 
                                               return new Column(
                                                 children: <Widget>[
-                                                  new ListTile(
-                                                    trailing: this.ecEdit[key]
-                                                        ? IconButton(
-                                                            icon: Icon(
-                                                              Icons.check,
-                                                              color:
-                                                                  Colors.green,
-                                                              size: 35,
-                                                            ),
-                                                            onPressed: () {
-                                                              String
-                                                                  newKey = this
-                                                                      .eckeyTextEditingControllers[
-                                                                          key]
-                                                                      .text
-                                                                      .toString()
-                                                                      .trim(),
-                                                                  newValue = this
-                                                                      .ecvalueTextEditingControllers[
-                                                                          key]
-                                                                      .text
-                                                                      .toString()
-                                                                      .trim();
-                                                              if (newKey.length ==
-                                                                      0 ||
-                                                                  newValue.length ==
-                                                                      0) {
-                                                                Fluttertoast.showToast(
-                                                                    msg:
-                                                                        "Field Values can't be EMPTY!",
-                                                                    toastLength:
-                                                                        Toast
-                                                                            .LENGTH_LONG,
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .deepOrange,
-                                                                    textColor:
-                                                                        Colors
-                                                                            .white);
-                                                              } else {
-                                                                setState(() {
-                                                                  if (key !=
-                                                                          newKey &&
-                                                                      this.ec[key] !=
-                                                                          newValue) {
-                                                                    this
-                                                                        .ec
-                                                                        .remove(
-                                                                            key);
-                                                                    this
-                                                                        .ecEdit
-                                                                        .remove(
-                                                                            key);
-                                                                    this.ec[newKey] =
-                                                                        newValue;
-                                                                    this.ecEdit[
-                                                                            newKey] =
-                                                                        false;
-                                                                  } else if (key ==
-                                                                          newKey &&
-                                                                      this.ec[key] !=
-                                                                          newValue) {
-                                                                    this.ec[key] =
-                                                                        newValue;
-                                                                    this.ecEdit[
-                                                                            key] =
-                                                                        false;
-                                                                  } else if (key !=
-                                                                          newKey &&
-                                                                      this.ec[key] ==
-                                                                          newValue) {
-                                                                    this
-                                                                        .ec
-                                                                        .remove(
-                                                                            key);
-                                                                    this
-                                                                        .ecEdit
-                                                                        .remove(
-                                                                            key);
-                                                                    this.ec[newKey] =
-                                                                        newValue;
-                                                                    this.ecEdit[
-                                                                            newKey] =
-                                                                        false;
-                                                                  } else {
-                                                                    this.ecEdit[
-                                                                            newKey] =
-                                                                        false;
-                                                                  }
-                                                                });
-                                                              }
-                                                            })
-                                                        : IconButton(
-                                                            icon: Icon(
-                                                              Icons.edit,
-                                                              color: Colors.red,
-                                                            ),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                this.ecEdit[
-                                                                    key] = !this
-                                                                        .ecEdit[
-                                                                    key];
-                                                              });
-                                                            }),
-                                                    title: this.ecEdit[key]
-                                                        ? TextField(
-                                                            controller:
-                                                                this.eckeyTextEditingControllers[
-                                                                    key],
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .multiline,
-                                                            maxLines: null,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              enabledBorder:
-                                                                  UnderlineInputBorder(
-                                                                borderSide: BorderSide(
+                                                  this.ecEdit.containsKey(key)
+                                                      ? ListTile(
+                                                          trailing: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: <Widget>[
+                                                              this.ecEdit[key]
+                                                                  ? IconButton(
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .check,
+                                                                        color: Colors
+                                                                            .green,
+                                                                        size:
+                                                                            35,
+                                                                      ),
+                                                                      onPressed:
+                                                                          () {
+                                                                        String
+                                                                            newKey = this.eckeyTextEditingControllers[key].text.toString().trim(),
+                                                                            newValue =
+                                                                                this.ecvalueTextEditingControllers[key].text.toString().trim();
+                                                                        if (newKey.length ==
+                                                                                0 ||
+                                                                            newValue.length ==
+                                                                                0) {
+                                                                          Fluttertoast.showToast(
+                                                                              msg: "Field Values can't be EMPTY!",
+                                                                              toastLength: Toast.LENGTH_LONG,
+                                                                              backgroundColor: Colors.deepOrange,
+                                                                              textColor: Colors.white);
+                                                                        } else {
+                                                                          setState(
+                                                                              () {
+                                                                            if (key != newKey &&
+                                                                                this.ec[key] != newValue) {
+                                                                              this.ec.remove(key);
+                                                                              this.ecEdit.remove(key);
+                                                                              this.ec[newKey] = newValue;
+                                                                              this.ecEdit[newKey] = false;
+                                                                            } else if (key == newKey &&
+                                                                                this.ec[key] != newValue) {
+                                                                              this.ec[key] = newValue;
+                                                                              this.ecEdit[key] = false;
+                                                                            } else if (key != newKey &&
+                                                                                this.ec[key] == newValue) {
+                                                                              this.ec.remove(key);
+                                                                              this.ecEdit.remove(key);
+                                                                              this.ec[newKey] = newValue;
+                                                                              this.ecEdit[newKey] = false;
+                                                                            } else {
+                                                                              this.ecEdit[newKey] = false;
+                                                                            }
+                                                                          });
+                                                                        }
+                                                                      })
+                                                                  : IconButton(
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .edit,
+                                                                        color: Colors
+                                                                            .deepPurple,
+                                                                      ),
+                                                                      onPressed:
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          this.ecEdit[key] =
+                                                                              !this.ecEdit[key];
+                                                                        });
+                                                                      }),
+                                                              IconButton(
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .remove_circle,
                                                                     color: Colors
-                                                                        .blueGrey),
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : new Text(
-                                                            "$key"
-                                                                .toString()
-                                                                .trim(),
-                                                            style: TextStyle(
-                                                                //fontSize: 20,
-                                                                color:
-                                                                    Colors.blue,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal),
+                                                                        .red,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) {
+                                                                          return AlertDialog(
+                                                                            title:
+                                                                                Text('Do you want to DEL?'),
+                                                                            content: Text("Key    : " +
+                                                                                key +
+                                                                                "\n" +
+                                                                                "Value : " +
+                                                                                this.ec[key]),
+                                                                            actions: <Widget>[
+                                                                              FlatButton(
+                                                                                child: Text(
+                                                                                  "NO",
+                                                                                  style: TextStyle(color: Colors.green, fontSize: 15, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop(); // dismiss dialog
+                                                                                },
+                                                                              ),
+                                                                              FlatButton(
+                                                                                child: Text(
+                                                                                  "DEL",
+                                                                                  style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  setState(() {
+                                                                                    this.ec.remove(key);
+                                                                                    this.ecEdit.remove(key);
+                                                                                  });
+                                                                                  Navigator.of(context).pop(); // dismiss dialog
+                                                                                },
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        });
+                                                                  })
+                                                            ],
                                                           ),
-                                                    subtitle: this.ecEdit[key]
-                                                        ? TextField(
-                                                            controller:
-                                                                this.ecvalueTextEditingControllers[
-                                                                    key],
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .multiline,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              enabledBorder:
-                                                                  UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: Colors
-                                                                        .blueGrey),
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : new Text(
-                                                            "${ec[key]}"
-                                                                .toString()
-                                                                .trim(),
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                  ),
+                                                          title:
+                                                              this.ecEdit[key]
+                                                                  ? TextField(
+                                                                      controller:
+                                                                          this.eckeyTextEditingControllers[
+                                                                              key],
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left,
+                                                                      keyboardType:
+                                                                          TextInputType
+                                                                              .multiline,
+                                                                      maxLines:
+                                                                          null,
+                                                                      inputFormatters: [
+                                                                        new WhitelistingTextInputFormatter(
+                                                                            RegExp("[A-Za-z0-9 ]")),
+                                                                      ],
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        enabledBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              BorderSide(color: Colors.blueGrey),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : new Text(
+                                                                      "$key"
+                                                                          .toString()
+                                                                          .trim(),
+                                                                      style: TextStyle(
+                                                                          //fontSize: 20,
+                                                                          color: Colors.blue,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          fontStyle: FontStyle.normal),
+                                                                    ),
+                                                          subtitle:
+                                                              this.ecEdit[key]
+                                                                  ? TextField(
+                                                                      controller:
+                                                                          this.ecvalueTextEditingControllers[
+                                                                              key],
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left,
+                                                                      keyboardType:
+                                                                          TextInputType
+                                                                              .multiline,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        enabledBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              BorderSide(color: Colors.blueGrey),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : new Text(
+                                                                      "${ec[key]}"
+                                                                          .toString()
+                                                                          .trim(),
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.black),
+                                                                    ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              EdgeInsets.all(0),
+                                                        ),
                                                   new Divider(
                                                     height: 3,
                                                     thickness: 2,
@@ -466,32 +540,72 @@ class DisplayandSubmitCompanyDetailsState
                                       : Column(children: <Widget>[
                                           Padding(
                                             padding: EdgeInsets.fromLTRB(
-                                                0, 20, 0, 0),
+                                                0, 10, 0, 0),
                                           ),
                                           this.jd.length != 0
-                                              ? Text(
-                                                  "Job Description",
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      color: Colors.red,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontStyle:
-                                                          FontStyle.italic),
-                                                )
+                                              ? new Container(
+                                                  child: ListTile(
+                                                      title: Text(
+                                                        "Job Decription",
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            color: Colors.red,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                      ),
+                                                      trailing: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          IconButton(
+                                                              icon: Icon(
+                                                                  Icons.remove,
+                                                                  color: Colors
+                                                                      .black),
+                                                              onPressed: () {
+                                                                if (this.showWidgetJD !=
+                                                                    false) {
+                                                                  setState(() {
+                                                                    this.showWidgetJD =
+                                                                        false;
+                                                                  });
+                                                                }
+                                                              }),
+                                                          IconButton(
+                                                              icon: Icon(
+                                                                  Icons.add,
+                                                                  color: Colors
+                                                                      .black),
+                                                              onPressed: () {
+                                                                if (this.showWidgetJD !=
+                                                                    true) {
+                                                                  setState(() {
+                                                                    this.showWidgetJD =
+                                                                        true;
+                                                                  });
+                                                                }
+                                                              }),
+                                                        ],
+                                                      )))
                                               : Padding(
                                                   padding: EdgeInsets.all(0),
                                                 ),
+                                          this.showWidgetJD
+                                              ? keyValue(false)
+                                              : Padding(
+                                                  padding: EdgeInsets.all(0)),
                                           ListView.builder(
                                             physics:
                                                 NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
-                                            itemCount: jd.length,
+                                            itemCount: this.jd.length,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
                                               String key =
-                                                  jd.keys.elementAt(index);
-
+                                                  this.jd.keys.elementAt(index);
+                                              print(key);
                                               this.jdkeyTextEditingControllers[
                                                       key] =
                                                   new TextEditingController();
@@ -531,176 +645,202 @@ class DisplayandSubmitCompanyDetailsState
 
                                               return new Column(
                                                 children: <Widget>[
-                                                  new ListTile(
-                                                    trailing: this.jdEdit[key]
-                                                        ? IconButton(
-                                                            icon: Icon(
-                                                              Icons.check,
-                                                              color:
-                                                                  Colors.green,
-                                                              size: 35,
-                                                            ),
-                                                            onPressed: () {
-                                                              String
-                                                                  newKey = this
-                                                                      .jdkeyTextEditingControllers[
-                                                                          key]
-                                                                      .text
-                                                                      .toString()
-                                                                      .trim(),
-                                                                  newValue = this
-                                                                      .jdvalueTextEditingControllers[
-                                                                          key]
-                                                                      .text
-                                                                      .toString()
-                                                                      .trim();
-                                                              if (newKey.length ==
-                                                                      0 ||
-                                                                  newValue.length ==
-                                                                      0) {
-                                                                Fluttertoast.showToast(
-                                                                    msg:
-                                                                        "Field Values can't be EMPTY!",
-                                                                    toastLength:
-                                                                        Toast
-                                                                            .LENGTH_LONG,
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .deepOrange,
-                                                                    textColor:
-                                                                        Colors
-                                                                            .white);
-                                                              } else {
-                                                                setState(() {
-                                                                  if (key !=
-                                                                          newKey &&
-                                                                      this.jd[key] !=
-                                                                          newValue) {
-                                                                    this
-                                                                        .jd
-                                                                        .remove(
-                                                                            key);
-                                                                    this
-                                                                        .jdEdit
-                                                                        .remove(
-                                                                            key);
-                                                                    this.jd[newKey] =
-                                                                        newValue;
-                                                                    this.jdEdit[
-                                                                            newKey] =
-                                                                        false;
-                                                                  } else if (key ==
-                                                                          newKey &&
-                                                                      this.jd[key] !=
-                                                                          newValue) {
-                                                                    this.jd[key] =
-                                                                        newValue;
-                                                                    this.jdEdit[
-                                                                            key] =
-                                                                        false;
-                                                                  } else if (key !=
-                                                                          newKey &&
-                                                                      this.jd[key] ==
-                                                                          newValue) {
-                                                                    this
-                                                                        .jd
-                                                                        .remove(
-                                                                            key);
-                                                                    this
-                                                                        .jdEdit
-                                                                        .remove(
-                                                                            key);
-                                                                    this.jd[newKey] =
-                                                                        newValue;
-                                                                    this.jdEdit[
-                                                                            newKey] =
-                                                                        false;
-                                                                  } else {
-                                                                    this.jdEdit[
-                                                                            newKey] =
-                                                                        false;
-                                                                  }
-                                                                });
-                                                              }
-                                                            })
-                                                        : IconButton(
-                                                            icon: Icon(
-                                                              Icons.edit,
-                                                              color: Colors.red,
-                                                            ),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                this.jdEdit[
-                                                                    key] = !this
-                                                                        .jdEdit[
-                                                                    key];
-                                                              });
-                                                            }),
-                                                    title: this.jdEdit[key]
-                                                        ? TextField(
-                                                            controller:
-                                                                this.jdkeyTextEditingControllers[
-                                                                    key],
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .multiline,
-                                                            maxLines: null,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              enabledBorder:
-                                                                  UnderlineInputBorder(
-                                                                borderSide: BorderSide(
+                                                  this.jdEdit.containsKey(key)
+                                                      ? ListTile(
+                                                          trailing: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: <Widget>[
+                                                              this.jdEdit[key]
+                                                                  ? IconButton(
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .check,
+                                                                        color: Colors
+                                                                            .green,
+                                                                        size:
+                                                                            35,
+                                                                      ),
+                                                                      onPressed:
+                                                                          () {
+                                                                        String
+                                                                            newKey = this.jdkeyTextEditingControllers[key].text.toString().trim(),
+                                                                            newValue =
+                                                                                this.jdvalueTextEditingControllers[key].text.toString().trim();
+                                                                        if (newKey.length ==
+                                                                                0 ||
+                                                                            newValue.length ==
+                                                                                0) {
+                                                                          Fluttertoast.showToast(
+                                                                              msg: "Field Values can't be EMPTY!",
+                                                                              toastLength: Toast.LENGTH_LONG,
+                                                                              backgroundColor: Colors.deepOrange,
+                                                                              textColor: Colors.white);
+                                                                        } else {
+                                                                          setState(
+                                                                              () {
+                                                                            if (key != newKey &&
+                                                                                this.jd[key] != newValue) {
+                                                                              this.jd.remove(key);
+                                                                              this.jdEdit.remove(key);
+                                                                              this.jd[newKey] = newValue;
+                                                                              this.jdEdit[newKey] = false;
+                                                                            } else if (key == newKey &&
+                                                                                this.jd[key] != newValue) {
+                                                                              this.jd[key] = newValue;
+                                                                              this.jdEdit[key] = false;
+                                                                            } else if (key != newKey &&
+                                                                                this.jd[key] == newValue) {
+                                                                              this.jd.remove(key);
+                                                                              this.jdEdit.remove(key);
+                                                                              this.jd[newKey] = newValue;
+                                                                              this.jdEdit[newKey] = false;
+                                                                            } else {
+                                                                              this.jdEdit[newKey] = false;
+                                                                            }
+                                                                          });
+                                                                        }
+                                                                      })
+                                                                  : IconButton(
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .edit,
+                                                                        color: Colors
+                                                                            .deepPurple,
+                                                                      ),
+                                                                      onPressed:
+                                                                          () {
+                                                                        setState(
+                                                                            () {
+                                                                          this.jdEdit[key] =
+                                                                              !this.jdEdit[key];
+                                                                        });
+                                                                      }),
+                                                              IconButton(
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .remove_circle,
                                                                     color: Colors
-                                                                        .blueGrey),
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : new Text(
-                                                            "$key"
-                                                                .toString()
-                                                                .trim(),
-                                                            style: TextStyle(
-                                                                //fontSize: 20,
-                                                                color:
-                                                                    Colors.blue,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontStyle:
-                                                                    FontStyle
-                                                                        .normal),
+                                                                        .red,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) {
+                                                                          return AlertDialog(
+                                                                            title:
+                                                                                Text('Do you want to DEL?'),
+                                                                            content: Text("Key    : " +
+                                                                                key +
+                                                                                "\n" +
+                                                                                "Value : " +
+                                                                                this.jd[key]),
+                                                                            actions: <Widget>[
+                                                                              FlatButton(
+                                                                                child: Text(
+                                                                                  "NO",
+                                                                                  style: TextStyle(color: Colors.green, fontSize: 15, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop(); // dismiss dialog
+                                                                                },
+                                                                              ),
+                                                                              FlatButton(
+                                                                                child: Text(
+                                                                                  "DEL",
+                                                                                  style: TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  setState(() {
+                                                                                    this.jd.remove(key);
+                                                                                    this.jdEdit.remove(key);
+                                                                                  });
+                                                                                  Navigator.of(context).pop(); // dismiss dialog
+                                                                                },
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        });
+                                                                  })
+                                                            ],
                                                           ),
-                                                    subtitle: this.jdEdit[key]
-                                                        ? TextField(
-                                                            controller:
-                                                                this.jdvalueTextEditingControllers[
-                                                                    key],
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .multiline,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              enabledBorder:
-                                                                  UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: Colors
-                                                                        .blueGrey),
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : new Text(
-                                                            "${jd[key]}"
-                                                                .toString()
-                                                                .trim(),
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                  ),
+                                                          title:
+                                                              this.jdEdit[key]
+                                                                  ? TextField(
+                                                                      controller:
+                                                                          this.jdkeyTextEditingControllers[
+                                                                              key],
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left,
+                                                                      keyboardType:
+                                                                          TextInputType
+                                                                              .multiline,
+                                                                      maxLines:
+                                                                          null,
+                                                                      inputFormatters: [
+                                                                        new WhitelistingTextInputFormatter(
+                                                                            RegExp("[A-Za-z0-9 ]")),
+                                                                      ],
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        enabledBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              BorderSide(color: Colors.blueGrey),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : new Text(
+                                                                      "$key"
+                                                                          .toString()
+                                                                          .trim(),
+                                                                      style: TextStyle(
+                                                                          //fontSize: 20,
+                                                                          color: Colors.blue,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          fontStyle: FontStyle.normal),
+                                                                    ),
+                                                          subtitle:
+                                                              this.jdEdit[key]
+                                                                  ? TextField(
+                                                                      controller:
+                                                                          this.jdvalueTextEditingControllers[
+                                                                              key],
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left,
+                                                                      keyboardType:
+                                                                          TextInputType
+                                                                              .multiline,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        enabledBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              BorderSide(color: Colors.blueGrey),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : new Text(
+                                                                      "${jd[key]}"
+                                                                          .toString()
+                                                                          .trim(),
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.black),
+                                                                    ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              EdgeInsets.all(0),
+                                                        ),
                                                   new Divider(
                                                     height: 3,
                                                     thickness: 2,
@@ -715,6 +855,10 @@ class DisplayandSubmitCompanyDetailsState
                                 onPressed: () {
                                   companyDetails.ec = this.ec;
                                   companyDetails.jd = this.jd;
+                                  print(companyDetails.companyName);
+                                  print(companyDetails.filter);
+                                  print(companyDetails.ec);
+                                  print(companyDetails.jd);
                                   postFirebase(companyDetails);
                                 },
                                 child: Text("SUBMIT"),
@@ -725,5 +869,188 @@ class DisplayandSubmitCompanyDetailsState
                             ],
                           ))),
             )));
+  }
+
+  Widget keyValue(bool what) {
+    return SingleChildScrollView(
+        padding: EdgeInsets.all(10),
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              TextField(
+                controller: what ? keyEC : keyJD,
+                obscureText: false,
+                autofocus: false,
+                textAlign: TextAlign.start,
+                keyboardType: TextInputType.multiline,
+                inputFormatters: [
+                  new WhitelistingTextInputFormatter(RegExp("[A-Za-z0-9 ]")),
+                ],
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.pink),
+                  ),
+                  hintText: 'Enter Key',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+              ),
+              TextField(
+                controller: what ? valueEC : valueJD,
+                obscureText: false,
+                autofocus: false,
+                textAlign: TextAlign.start,
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.pink),
+                  ),
+                  hintText: 'Enter Value',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  if (what) {
+                    WidgetsBinding.instance.focusManager.primaryFocus
+                        ?.unfocus();
+                    setState(() {
+                      if (keyEC.text.length == 0 || valueEC.text.length == 0) {
+                        Fluttertoast.showToast(
+                            msg: "Field Values can't be EMPTY!",
+                            toastLength: Toast.LENGTH_LONG,
+                            backgroundColor: Colors.deepOrange,
+                            textColor: Colors.white);
+                      } else {
+                        if (this.ec.containsKey(keyEC.text.trim().toString())) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                Future.delayed(Duration(seconds: 5), () {
+                                  Navigator.of(context).pop();
+                                });
+                                return AlertDialog(
+                                  title: Text('Key already Exists!'),
+                                  content: Text("Key    : " +
+                                      keyEC.text.trim().toString() +
+                                      "\n" +
+                                      "Value : " +
+                                      this.ec[keyEC.text.trim().toString()]),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text(
+                                        "Still Update?",
+                                        style: TextStyle(
+                                            color: Colors.orange,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          this.ec[keyEC.text
+                                                  .trim()
+                                                  .toString()] =
+                                              valueEC.text.trim().toString();
+                                          this.ecEdit[keyEC.text
+                                              .trim()
+                                              .toString()] = false;
+                                          this.showWidgetEC = false;
+                                          keyEC.clear();
+                                          valueEC.clear();
+                                        });
+                                        Navigator.of(context)
+                                            .pop(); // dismiss dialog
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
+                        } else {
+                          this.ec[keyEC.text.trim().toString()] =
+                              valueEC.text.trim().toString();
+                          this.showWidgetEC = false;
+                          this.ecEdit[keyEC.text.trim().toString()] = false;
+                          keyEC.clear();
+                          valueEC.clear();
+                        }
+                      }
+                    });
+                    print(this.ec.length);
+                  } else {
+                    WidgetsBinding.instance.focusManager.primaryFocus
+                        ?.unfocus();
+                    setState(() {
+                      if (keyJD.text.length == 0 || valueJD.text.length == 0) {
+                        Fluttertoast.showToast(
+                            msg: "Field Values can't be EMPTY!",
+                            toastLength: Toast.LENGTH_LONG,
+                            backgroundColor: Colors.deepOrange,
+                            textColor: Colors.white);
+                      } else {
+                        if (this.jd.containsKey(keyJD.text.trim().toString())) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                Future.delayed(Duration(seconds: 5), () {
+                                  Navigator.of(context).pop();
+                                });
+                                return AlertDialog(
+                                  title: Text('Key already Exists!'),
+                                  content: Text("Key    : " +
+                                      keyJD.text.trim().toString() +
+                                      "\n" +
+                                      "Value : " +
+                                      this.jd[keyJD.text.trim().toString()]),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text(
+                                        "Still Update?",
+                                        style: TextStyle(
+                                            color: Colors.orange,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          this.jd[keyJD.text
+                                                  .trim()
+                                                  .toString()] =
+                                              valueJD.text.trim().toString();
+                                          this.jdEdit[keyJD.text
+                                              .trim()
+                                              .toString()] = false;
+                                          this.showWidgetJD = false;
+                                          keyJD.clear();
+                                          valueJD.clear();
+                                        });
+                                        Navigator.of(context)
+                                            .pop(); // dismiss dialog
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
+                        } else {
+                          this.jd[keyJD.text.trim().toString()] =
+                              valueJD.text.trim().toString();
+                          this.jdEdit[keyJD.text.trim().toString()] = false;
+                          this.showWidgetJD = false;
+                          keyJD.clear();
+                          valueJD.clear();
+                        }
+                      }
+                    });
+                    print(this.jd.length);
+                  }
+                },
+                color: Colors.pink,
+                child: Text(
+                  "Add",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
