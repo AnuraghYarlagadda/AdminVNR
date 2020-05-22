@@ -1,5 +1,7 @@
+import 'package:adminplacements/displayCompaniesList.dart';
 import 'package:adminplacements/home.dart';
 import 'package:adminplacements/manageAdmins.dart';
+import 'package:adminplacements/manageCompanies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,6 +28,8 @@ class MyApp extends StatelessWidget {
           routes: {
             "home": (context) => Home(),
             "manageAdmins": (context) => ManageAdmin(),
+            "manageCompanies": (context) => ManageCompanies(),
+            "displayCompaniesList": (context) => DisplayCompaniesList(),
           },
         ));
   }

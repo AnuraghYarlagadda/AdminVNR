@@ -197,7 +197,8 @@ class AddCompanyState extends State<AddCompany> {
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.multiline,
                     inputFormatters: [
-                      new WhitelistingTextInputFormatter(RegExp("[A-Za-z0-9 ]")),
+                      new WhitelistingTextInputFormatter(
+                          RegExp("[A-Za-z0-9 ]")),
                     ],
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
@@ -386,7 +387,8 @@ class AddCompanyState extends State<AddCompany> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      return DisplayandSubmitCompanyDetails(companyDetails);
+                      return DisplayandSubmitCompanyDetails(
+                          companyDetails, "Review and Submit");
                     },
                   ),
                 );

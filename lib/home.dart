@@ -231,6 +231,7 @@ class HomeState extends State<Home> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Home"),
+          leading: Icon(Icons.home),
           actions: <Widget>[
             PopupMenuButton<String>(
               onSelected: handleClick,
@@ -280,13 +281,14 @@ class HomeState extends State<Home> {
                                                   fontSize: 25,
                                                   color: Colors.indigo,
                                                   fontWeight: FontWeight.bold,
-                                                  fontStyle: FontStyle.italic),
+                                                  fontStyle: FontStyle.normal),
                                             ),
                                             subtitle: Text(
                                               "- Add or Delete Admins \n- Grant or Revoke Permissions",
                                               style: TextStyle(
                                                   fontSize: 13,
-                                                  color: Colors.black87),
+                                                  color: Colors.black87,
+                                                  fontStyle: FontStyle.italic),
                                             ),
                                             trailing: IconButton(
                                                 icon: Icon(
@@ -317,7 +319,7 @@ class HomeState extends State<Home> {
                                             fontSize: 25,
                                             color: Colors.indigo,
                                             fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic),
+                                            fontStyle: FontStyle.normal),
                                       ),
                                       trailing: whatToLoadwhileUploading(
                                           "Alumni Details"),
@@ -325,7 +327,8 @@ class HomeState extends State<Home> {
                                         "- An Excel Sheet with the details of Alumni's Contact and the companies they got placed into.",
                                         style: TextStyle(
                                             fontSize: 13,
-                                            color: Colors.black87),
+                                            color: Colors.black87,
+                                            fontStyle: FontStyle.italic),
                                       ),
                                     ),
                                     new Divider(
@@ -339,7 +342,7 @@ class HomeState extends State<Home> {
                                             fontSize: 25,
                                             color: Colors.indigo,
                                             fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic),
+                                            fontStyle: FontStyle.normal),
                                       ),
                                       trailing: whatToLoadwhileUploading(
                                           "List Of Companies"),
@@ -347,7 +350,8 @@ class HomeState extends State<Home> {
                                         "- An Excel with the details of the Companies that visited our college for recruitment last year and the packages they offered.",
                                         style: TextStyle(
                                             fontSize: 13,
-                                            color: Colors.black87),
+                                            color: Colors.black87,
+                                            fontStyle: FontStyle.italic),
                                       ),
                                     ),
                                     new Divider(
@@ -361,7 +365,7 @@ class HomeState extends State<Home> {
                                             fontSize: 25,
                                             color: Colors.indigo,
                                             fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic),
+                                            fontStyle: FontStyle.normal),
                                       ),
                                       trailing: whatToLoadwhileUploading(
                                           "Requirements and Sample Resume"),
@@ -369,69 +373,78 @@ class HomeState extends State<Home> {
                                         "- A PDF Document with the details of requirements that companies have been looking for and Few Sample Resumes to refer.",
                                         style: TextStyle(
                                             fontSize: 13,
-                                            color: Colors.black87),
+                                            color: Colors.black87,
+                                            fontStyle: FontStyle.italic),
                                       ),
                                     ),
                                     new Divider(
                                       height: 2.0,
                                       thickness: 2.5,
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.all(50),
-                                      child: Center(
-                                        child: RaisedButton(
-                                          onPressed: () async {
-                                            await (Connectivity()
-                                                    .checkConnectivity())
-                                                .then((onValue) {
-                                              if (onValue ==
-                                                  ConnectivityResult.none) {
+                                    ListTile(
+                                      title: Text(
+                                        "Manage Companies",
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.indigo,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.normal),
+                                      ),
+                                      subtitle: Text(
+                                        "- Add new Company Details\n- Modify existing Data",
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.black87,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                      trailing: IconButton(
+                                        icon: Icon(
+                                          Icons.settings,
+                                          size: 35,
+                                          color: Colors.red,
+                                        ),
+                                        onPressed: () async {
+                                          await (Connectivity()
+                                                  .checkConnectivity())
+                                              .then((onValue) {
+                                            if (onValue ==
+                                                ConnectivityResult.none) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "No Active Internet Connection!",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  backgroundColor: Colors.red,
+                                                  textColor: Colors.white);
+                                              openWIFISettingsVNR();
+                                            } else {
+                                              if (this
+                                                      .currentAdmins
+                                                      .where((item) => (item
+                                                                  .email ==
+                                                              this.userEmail &&
+                                                          item.permission))
+                                                      .length >
+                                                  0) {
+                                                Navigator.of(context).pushNamed(
+                                                    "manageCompanies");
+                                              } else {
                                                 Fluttertoast.showToast(
-                                                    msg:
-                                                        "No Active Internet Connection!",
+                                                    msg: "Permission Denied ",
                                                     toastLength:
-                                                        Toast.LENGTH_SHORT,
+                                                        Toast.LENGTH_LONG,
                                                     backgroundColor: Colors.red,
                                                     textColor: Colors.white);
-                                                openWIFISettingsVNR();
-                                              } else {
-                                                if (this
-                                                        .currentAdmins
-                                                        .where((item) => (item
-                                                                    .email ==
-                                                                this.userEmail &&
-                                                            item.permission))
-                                                        .length >
-                                                    0) {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) {
-                                                        return AddCompany();
-                                                      },
-                                                    ),
-                                                  );
-                                                } else {
-                                                  Fluttertoast.showToast(
-                                                      msg: "Permission Denied ",
-                                                      toastLength:
-                                                          Toast.LENGTH_LONG,
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      textColor: Colors.white);
-                                                }
                                               }
-                                            });
-                                          },
-                                          child: Text(
-                                            "Add Company Details",
-                                            style: TextStyle(fontSize: 17),
-                                          ),
-                                          color: Colors.green,
-                                          textColor: Colors.white,
-                                          elevation: 15,
-                                        ),
+                                            }
+                                          });
+                                        },
                                       ),
-                                    )
+                                    ),
+                                    new Divider(
+                                      height: 2.0,
+                                      thickness: 2.5,
+                                    ),
                                   ],
                                 )),
                             scrollDirection: Axis.vertical,

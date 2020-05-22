@@ -9,7 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class DisplayandSubmitCompanyDetails extends StatefulWidget {
   final CompanyDetails companyDetails;
-  const DisplayandSubmitCompanyDetails(this.companyDetails);
+  final String appTitle;
+  const DisplayandSubmitCompanyDetails(this.companyDetails, this.appTitle);
   @override
   State<StatefulWidget> createState() {
     return DisplayandSubmitCompanyDetailsState();
@@ -19,6 +20,7 @@ class DisplayandSubmitCompanyDetails extends StatefulWidget {
 class DisplayandSubmitCompanyDetailsState
     extends State<DisplayandSubmitCompanyDetails> {
   CompanyDetails companyDetails;
+  String appTitile;
   LinkedHashMap ec, jd;
   LinkedHashMap ecEdit, jdEdit;
   double width, height;
@@ -41,10 +43,15 @@ class DisplayandSubmitCompanyDetailsState
   void initState() {
     super.initState();
     this.companyDetails = widget.companyDetails;
+    this.appTitile = widget.appTitle;
     this.ecEdit = new LinkedHashMap<dynamic, bool>();
     this.jdEdit = new LinkedHashMap<dynamic, bool>();
-    this.companyDetails.ec.forEach((k, v) => {this.ecEdit[k] = false});
-    this.companyDetails.jd.forEach((k, v) => {this.jdEdit[k] = false});
+    if (this.companyDetails.ec != null) {
+      this.companyDetails.ec.forEach((k, v) => {this.ecEdit[k] = false});
+    }
+    if (this.companyDetails.jd != null) {
+      this.companyDetails.jd.forEach((k, v) => {this.jdEdit[k] = false});
+    }
     this.eckeyTextEditingControllers =
         new LinkedHashMap<dynamic, TextEditingController>();
     this.jdkeyTextEditingControllers =
@@ -91,12 +98,23 @@ class DisplayandSubmitCompanyDetailsState
           .child(companyDetails.filter)
           .child(companyDetails.companyName)
           .set(companyDetails.companyName);
-      Fluttertoast.showToast(
-          msg: companyDetails.companyName + " Added Successfully!",
-          toastLength: Toast.LENGTH_LONG,
-          backgroundColor: Colors.green,
-          textColor: Colors.white);
-      Navigator.of(context).pushNamed("home");
+
+      if (this.appTitile == "Review and Submit") {
+        Fluttertoast.showToast(
+            msg: companyDetails.companyName + " Added Successfully!",
+            toastLength: Toast.LENGTH_LONG,
+            backgroundColor: Colors.green,
+            textColor: Colors.white);
+        Navigator.of(context).popUntil(ModalRoute.withName('manageCompanies'));
+      } else if (this.appTitile == "Edit and Submit") {
+        Fluttertoast.showToast(
+            msg: companyDetails.companyName + " Modified Successfully!",
+            toastLength: Toast.LENGTH_LONG,
+            backgroundColor: Colors.green,
+            textColor: Colors.white);
+        Navigator.of(context)
+            .popUntil(ModalRoute.withName('displayCompaniesList'));
+      }
     } on PlatformException catch (e) {
       print("Oops! " + e.toString());
     }
@@ -154,7 +172,7 @@ class DisplayandSubmitCompanyDetailsState
     return WillPopScope(
         onWillPop: _onBackPressed,
         child: Scaffold(
-            appBar: AppBar(title: Text("Review and Submit")),
+            appBar: AppBar(title: Text(this.appTitile)),
             body: OfflineBuilder(
               connectivityBuilder: (
                 BuildContext context,
@@ -392,7 +410,7 @@ class DisplayandSubmitCompanyDetailsState
                                                                         Icons
                                                                             .edit,
                                                                         color: Colors
-                                                                            .deepPurple,
+                                                                            .indigo,
                                                                       ),
                                                                       onPressed:
                                                                           () {
@@ -405,7 +423,7 @@ class DisplayandSubmitCompanyDetailsState
                                                               IconButton(
                                                                   icon: Icon(
                                                                     Icons
-                                                                        .remove_circle,
+                                                                        .delete_forever,
                                                                     color: Colors
                                                                         .red,
                                                                   ),
@@ -709,7 +727,7 @@ class DisplayandSubmitCompanyDetailsState
                                                                         Icons
                                                                             .edit,
                                                                         color: Colors
-                                                                            .deepPurple,
+                                                                            .indigo,
                                                                       ),
                                                                       onPressed:
                                                                           () {
@@ -722,7 +740,7 @@ class DisplayandSubmitCompanyDetailsState
                                                               IconButton(
                                                                   icon: Icon(
                                                                     Icons
-                                                                        .remove_circle,
+                                                                        .delete_forever,
                                                                     color: Colors
                                                                         .red,
                                                                   ),
