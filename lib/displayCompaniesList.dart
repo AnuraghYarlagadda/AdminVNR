@@ -180,11 +180,13 @@ class DisplayCompaniesListState extends State<DisplayCompaniesList> {
           centerTitle: true,
           title: TextField(
             controller: editingController,
+            cursorColor: Colors.white,
+            cursorWidth: 2.5,
             style: new TextStyle(
               color: Colors.white,
             ),
             onChanged: (value) {
-              filterSearchResults(value);
+              filterSearchResults(value.toLowerCase());
             },
             decoration: new InputDecoration(
                 border: InputBorder.none,
