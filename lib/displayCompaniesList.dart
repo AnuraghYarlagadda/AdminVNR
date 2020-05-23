@@ -176,7 +176,11 @@ class DisplayCompaniesListState extends State<DisplayCompaniesList> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
-          leading: Icon(Icons.search),
+          leading: Icon(
+            Icons.search,
+            color: Colors.white,
+            size: 30,
+          ),
           centerTitle: true,
           title: TextField(
             controller: editingController,
@@ -186,7 +190,7 @@ class DisplayCompaniesListState extends State<DisplayCompaniesList> {
               color: Colors.white,
             ),
             onChanged: (value) {
-              filterSearchResults(value.toLowerCase());
+              filterSearchResults(value.toLowerCase().trim());
             },
             decoration: new InputDecoration(
                 border: InputBorder.none,
@@ -197,6 +201,18 @@ class DisplayCompaniesListState extends State<DisplayCompaniesList> {
                 hintText: "Search ",
                 hintStyle: new TextStyle(color: Colors.white)),
           ),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(
+                  Icons.clear,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () {
+                  editingController.clear();
+                  filterSearchResults("");
+                })
+          ],
         ),
         body: OfflineBuilder(
           connectivityBuilder: (
